@@ -59,104 +59,139 @@ export function ResultsComponent({ results, onBack, onRetake }: ResultsComponent
     }, 500)
   }, [])
 
-  // Cập nhật hàm generateCertificate để hiển thị thông tin sinh viên
+  // Thiết kế lại giấy chứng nhận theo mẫu đẹp
   const generateCertificate = () => {
     // Lấy thông tin sinh viên
     const studentName = results.studentInfo?.name || "Học Viên"
     const studentId = results.studentInfo?.studentId || ""
 
-    // Tùy chỉnh giao diện giấy chứng nhận dựa trên điểm số
-    let certificateStyle = ""
-    let scoreDisplay = ""
+    // Tùy chỉnh màu sắc và thông điệp dựa trên điểm số
+    let badgeText = "ACHIEVEMENT"
+    let badgeSubtext = "AWARD"
     let specialMessage = ""
-    let borderColor = "#4CAF50"
-    let bgGradient = "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)"
-    let badgeColor = "#4CAF50"
-    let titleColor = "#4CAF50"
+    let gradeLevel = "COMPLETION"
 
     if (score === 0) {
-      scoreDisplay = "0/10 điểm"
-      specialMessage = "Hãy tiếp tục cố gắng và thử lại!"
-      borderColor = "#f44336"
-      bgGradient = "linear-gradient(135deg, #f5f7fa 0%, #ffcdd2 100%)"
-      badgeColor = "#f44336"
-      titleColor = "#f44336"
+      badgeText = "PARTICIPATION"
+      badgeSubtext = "CERTIFICATE"
+      specialMessage = "Keep trying and never give up!"
+      gradeLevel = "PARTICIPATION"
     } else if (perfect) {
-      scoreDisplay = "10đ"
-      specialMessage = "Chúc mừng! Bạn đã đạt điểm tuyệt đối!"
-      borderColor = "#FFD700"
-      bgGradient = "linear-gradient(135deg, #fff9c4 0%, #ffecb3 100%)"
-      badgeColor = "#FF9800"
-      titleColor = "#FF9800"
-      certificateStyle = `
-        box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
-        animation: glow 2s infinite alternate;
-      `
+      badgeText = "EXCELLENCE"
+      badgeSubtext = "AWARD"
+      specialMessage = "Outstanding performance with perfect score!"
+      gradeLevel = "EXCELLENCE"
+    } else if (passed) {
+      badgeText = "ACHIEVEMENT"
+      badgeSubtext = "AWARD"
+      specialMessage = "Congratulations on your successful completion!"
+      gradeLevel = "ACHIEVEMENT"
     } else {
-      scoreDisplay = `${score}/${total} điểm (${percentage}%)`
-      specialMessage = score >= 7 ? "Chúc mừng bạn đã hoàn thành xuất sắc!" : "Cố gắng hơn trong lần sau nhé!"
-    }
-
-    // Tạo các icon trang trí dựa trên điểm số
-    let decorations = ""
-    if (perfect) {
-      decorations = `
-        <div style="position: absolute; top: 20px; right: 20px; transform: rotate(15deg);">
-          <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#FFD700" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-          </svg>
-        </div>
-        <div style="position: absolute; top: 30px; left: 20px; transform: rotate(-15deg);">
-          <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#FFD700" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="12" cy="8" r="7"></circle>
-            <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
-          </svg>
-        </div>
-      `
+      badgeText = "PARTICIPATION"
+      badgeSubtext = "CERTIFICATE"
+      specialMessage = "Thank you for your participation and effort!"
+      gradeLevel = "PARTICIPATION"
     }
 
     const certificateHTML = `
-    <div style="width: 800px; height: 600px; border: 10px solid ${borderColor}; padding: 40px; text-align: center; font-family: Arial, sans-serif; background: ${bgGradient}; margin: 20px auto; position: relative; ${certificateStyle}">
-      ${decorations}
-      <div style="border: 3px solid ${borderColor}; padding: 30px; height: 100%; display: flex; flex-direction: column; justify-content: center;">
-        <h1 style="color: ${titleColor}; font-size: 42px; margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">🏆 CHỨNG NHẬN HOÀN THÀNH</h1>
-        <h2 style="color: #333; font-size: 28px; margin-bottom: 30px; font-weight: normal;">Khóa học: Giá Trị Riêng & Vector Riêng</h2>
-        <p style="font-size: 20px; margin-bottom: 20px; color: #666;">Chúng tôi xin chứng nhận rằng</p>
-        <h3 style="color: ${titleColor}; font-size: 32px; margin-bottom: 10px; border-bottom: 3px solid ${borderColor}; display: inline-block; padding-bottom: 10px;">${studentName}</h3>
-        ${studentId ? `<p style="font-size: 18px; margin-bottom: 20px; color: #666;">MSSV: ${studentId}</p>` : ""}
-        <p style="font-size: 20px; margin-bottom: 20px; color: #666;">đã hoàn thành bài kiểm tra với điểm số</p>
-        <div style="background: ${badgeColor}; color: white; padding: 20px; border-radius: 15px; margin: 20px 0; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);">
-          <h2 style="font-size: 48px; margin: 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">${scoreDisplay}</h2>
-          <p style="font-size: 18px; margin: 10px 0 0 0; opacity: 0.9;">Xếp loại: ${getGradeText()}</p>
-          <p style="font-size: 16px; margin: 10px 0 0 0; font-style: italic;">${specialMessage}</p>
+    <div style="width: 900px; height: 650px; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); margin: 20px auto; position: relative; font-family: 'Times New Roman', serif; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+      
+      <!-- Background decorative elements -->
+      <div style="position: absolute; top: -50px; right: -50px; width: 300px; height: 300px; background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); border-radius: 50%; opacity: 0.1;"></div>
+      <div style="position: absolute; bottom: -50px; left: -50px; width: 250px; height: 250px; background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%); border-radius: 50%; opacity: 0.1;"></div>
+      
+      <!-- Top decorative border -->
+      <div style="position: absolute; top: 0; left: 0; right: 0; height: 8px; background: linear-gradient(90deg, #dc3545 0%, #ffc107 50%, #dc3545 100%);"></div>
+      
+      <!-- Award Badge -->
+      <div style="position: absolute; top: 40px; left: 50px; width: 120px; height: 120px;">
+        <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #ffc107 0%, #ffb300 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(255,193,7,0.4); border: 4px solid #fff;">
+          <div style="text-align: center; color: #000;">
+            <div style="font-size: 14px; font-weight: bold; line-height: 1;">${badgeText}</div>
+            <div style="font-size: 12px; margin-top: 2px;">${badgeSubtext}</div>
+            <div style="margin-top: 8px;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+            </div>
+          </div>
         </div>
-        <p style="font-size: 16px; color: #666; margin-bottom: 20px;">Thời gian hoàn thành: ${formatTime(timeSpent)}</p>
-        <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #ddd;">
-          <p style="font-size: 14px; color: #888;">Ngày cấp: ${new Date().toLocaleDateString("vi-VN")}</p>
-          <p style="font-size: 12px; color: #aaa; margin-top: 10px;">Ứng dụng học tập Giá Trị Riêng & Vector Riêng</p>
+        <!-- Ribbon -->
+        <div style="position: absolute; bottom: -15px; left: 50%; transform: translateX(-50%); width: 40px; height: 30px; background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); clip-path: polygon(0 0, 100% 0, 85% 100%, 50% 80%, 15% 100%);"></div>
+      </div>
+      
+      <!-- Main content -->
+      <div style="padding: 60px 80px 40px 200px; height: 100%; display: flex; flex-direction: column; justify-content: center;">
+        
+        <!-- Title -->
+        <h1 style="font-size: 48px; color: #2c3e50; margin: 0 0 10px 0; font-weight: normal; letter-spacing: 2px;">Certificate</h1>
+        <h2 style="font-size: 20px; color: #6c757d; margin: 0 0 30px 0; font-weight: normal; letter-spacing: 1px;">OF ${gradeLevel}</h2>
+        
+        <!-- Subtitle -->
+        <p style="font-size: 16px; color: #6c757d; margin: 0 0 25px 0; line-height: 1.4;">THIS CERTIFICATE IS PROUDLY PRESENTED TO</p>
+        
+        <!-- Student name -->
+        <h3 style="font-size: 36px; color: #2c3e50; margin: 0 0 5px 0; font-family: 'Brush Script MT', cursive; border-bottom: 2px solid #dc3545; padding-bottom: 8px; display: inline-block;">${studentName}</h3>
+        
+        ${studentId ? `<p style="font-size: 14px; color: #6c757d; margin: 5px 0 25px 0;">Student ID: ${studentId}</p>` : '<div style="margin-bottom: 25px;"></div>'}
+        
+        <!-- Course info -->
+        <p style="font-size: 16px; color: #495057; margin: 0 0 20px 0; line-height: 1.6;">
+          For successfully completing the course on <strong>Eigenvalues & Eigenvectors</strong><br>
+          and demonstrating proficiency in linear algebra concepts.
+        </p>
+        
+        <!-- Score display -->
+        <div style="background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); color: white; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: center; box-shadow: 0 4px 15px rgba(220,53,69,0.3);">
+          <div style="font-size: 32px; font-weight: bold; margin-bottom: 5px;">${perfect ? "10đ" : `${score}/${total} điểm`}</div>
+          <div style="font-size: 16px; opacity: 0.9;">Grade: ${getGradeText()}</div>
+          <div style="font-size: 14px; margin-top: 8px; font-style: italic;">${specialMessage}</div>
+        </div>
+        
+        <!-- Bottom info -->
+        <div style="display: flex; justify-content: space-between; margin-top: 30px; padding-top: 20px; border-top: 1px solid #dee2e6;">
+          <div style="text-align: center; flex: 1;">
+            <div style="border-bottom: 1px solid #6c757d; padding-bottom: 5px; margin-bottom: 5px; width: 150px;">
+              ${new Date().toLocaleDateString("vi-VN")}
+            </div>
+            <div style="font-size: 12px; color: #6c757d; text-transform: uppercase; letter-spacing: 1px;">DATE</div>
+          </div>
+          <div style="text-align: center; flex: 1;">
+            <div style="border-bottom: 1px solid #6c757d; padding-bottom: 5px; margin-bottom: 5px; width: 150px; margin-left: auto;">
+              Digital Certificate
+            </div>
+            <div style="font-size: 12px; color: #6c757d; text-transform: uppercase; letter-spacing: 1px;">SIGNATURE</div>
+          </div>
+        </div>
+        
+        <!-- Footer -->
+        <div style="text-align: center; margin-top: 20px;">
+          <p style="font-size: 11px; color: #adb5bd; margin: 0;">Eigenvalue & Eigenvector Learning Platform</p>
+          <p style="font-size: 10px; color: #adb5bd; margin: 5px 0 0 0;">Completion Time: ${formatTime(timeSpent)}</p>
         </div>
       </div>
+      
+      <!-- Decorative corner elements -->
+      <div style="position: absolute; top: 20px; right: 20px; width: 60px; height: 60px; border: 3px solid #ffc107; border-radius: 50%; opacity: 0.3;"></div>
+      <div style="position: absolute; bottom: 20px; left: 20px; width: 40px; height: 40px; background: linear-gradient(45deg, #dc3545, #ffc107); border-radius: 50%; opacity: 0.2;"></div>
+      
     </div>
-    <style>
-      @keyframes glow {
-        from {
-          box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-        }
-        to {
-          box-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 30px rgba(255, 215, 0, 0.6);
-        }
-      }
-    </style>
   `
 
-    const newWindow = window.open("", "_blank", "width=900,height=700")
+    const newWindow = window.open("", "_blank", "width=1000,height=750")
     if (newWindow) {
       newWindow.document.write(`
         <html>
           <head>
-            <title>Chứng nhận hoàn thành - ${score}/${total} điểm</title>
+            <title>Certificate of ${gradeLevel} - ${studentName}</title>
             <style>
-              body { margin: 0; padding: 20px; background: #f0f0f0; }
+              @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
+              body { 
+                margin: 0; 
+                padding: 20px; 
+                background: #f8f9fa;
+                font-family: 'Times New Roman', serif;
+              }
               @media print {
                 body { background: white; }
                 .no-print { display: none; }
@@ -165,8 +200,8 @@ export function ResultsComponent({ results, onBack, onRetake }: ResultsComponent
           </head>
           <body>
             <div class="no-print" style="text-align: center; margin-bottom: 20px;">
-              <button onclick="window.print()" style="background: ${badgeColor}; color: white; border: none; padding: 10px 20px; border-radius: 5px; font-size: 16px; cursor: pointer;">🖨️ In chứng nhận</button>
-              <button onclick="window.close()" style="background: #666; color: white; border: none; padding: 10px 20px; border-radius: 5px; font-size: 16px; cursor: pointer; margin-left: 10px;">❌ Đóng</button>
+              <button onclick="window.print()" style="background: #dc3545; color: white; border: none; padding: 12px 24px; border-radius: 6px; font-size: 16px; cursor: pointer; margin-right: 10px; box-shadow: 0 2px 8px rgba(220,53,69,0.3);">🖨️ Print Certificate</button>
+              <button onclick="window.close()" style="background: #6c757d; color: white; border: none; padding: 12px 24px; border-radius: 6px; font-size: 16px; cursor: pointer; box-shadow: 0 2px 8px rgba(108,117,125,0.3);">❌ Close</button>
             </div>
             ${certificateHTML}
           </body>
