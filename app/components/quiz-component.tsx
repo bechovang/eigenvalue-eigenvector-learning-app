@@ -5,8 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
-import { Clock, ArrowLeft, ArrowRight, Eye } from "lucide-react"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Clock, ArrowLeft, ArrowRight } from "lucide-react"
 
 interface Question {
   id: number
@@ -40,14 +39,30 @@ export function QuizComponent({ onComplete, onBack }: QuizComponentProps) {
   useEffect(() => {
     const loadQuestions = async () => {
       try {
-        const response = await fetch("/quizbank.json")
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`)
+        // Thử nhiều đường dẫn khác nhau để tìm file JSON
+        const paths = ["/quizbank.json", "./quizbank.json", "../quizbank.json", "/public/quizbank.json"]
+        let data = null
+
+        for (const path of paths) {
+          try {
+            const response = await fetch(path)
+            if (response.ok) {
+              data = await response.json()
+              console.log(`Successfully loaded questions from ${path}`)
+              break
+            }
+          } catch (e) {
+            console.log(`Failed to load from ${path}`)
+          }
         }
-        const data = await response.json()
-        setQuestions(data.questions)
-        setAnswers(new Array(data.questions.length).fill(-1))
-        setIsLoading(false)
+
+        if (data) {
+          setQuestions(data.questions)
+          setAnswers(new Array(data.questions.length).fill(-1))
+          setIsLoading(false)
+        } else {
+          throw new Error("Could not load questions from any path")
+        }
       } catch (error) {
         console.error("Error loading questions:", error)
         // Fallback to hardcoded questions if JSON fails to load
@@ -334,54 +349,7 @@ export function QuizComponent({ onComplete, onBack }: QuizComponentProps) {
               ))}
             </div>
 
-            <div className="flex justify-between items-center mt-6">
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button variant="outline">
-                    <Eye className="w-4 h-4 mr-2" />
-                    Xem Lời Giải
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
-                  <DialogHeader>
-                    <DialogTitle>Lời Giải Chi Tiết - Câu {currentQuestion + 1}</DialogTitle>
-                  </DialogHeader>
-                  <div className="space-y-4">
-                    {/* Show matrices and vectors in explanation */}
-                    {question.matrixA && (
-                      <div className="grid md:grid-cols-2 gap-4">
-                        <div>{renderMatrix(question.matrixA, "Ma trận A")}</div>
-                        <div>{renderMatrix(question.matrixB!, "Ma trận B")}</div>
-                      </div>
-                    )}
-
-                    {question.vectorU && question.vectorV && (
-                      <div className="grid md:grid-cols-2 gap-4">
-                        <div>{renderVector(question.vectorU, "Vector u")}</div>
-                        <div>{renderVector(question.vectorV, "Vector v")}</div>
-                      </div>
-                    )}
-
-                    <div className="p-4 bg-green-50 rounded-lg">
-                      <p className="font-medium text-green-800 mb-2">
-                        Đáp án đúng: {String.fromCharCode(65 + question.correct)}
-                      </p>
-                      <p className="text-green-700">{question.explanation}</p>
-                    </div>
-                    <div className="space-y-2">
-                      <p className="font-medium">Giải thích các đáp án sai:</p>
-                      {question.wrongExplanations.map((exp, index) => (
-                        <div key={index} className="p-3 bg-red-50 rounded-lg">
-                          <p className="text-red-700 text-sm">
-                            <span className="font-medium">{String.fromCharCode(66 + index)}:</span> {exp}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </DialogContent>
-              </Dialog>
-
+            <div className="flex justify-end items-center mt-6">
               <div className="flex gap-2">
                 <Button
                   variant="outline"

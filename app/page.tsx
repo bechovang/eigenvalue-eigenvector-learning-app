@@ -1,57 +1,72 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
-import { Clock, BookOpen, Award, Play, Pause, SkipForward, SkipBack } from 'lucide-react'
+import { Clock, BookOpen, Award, Play } from "lucide-react"
 import { QuizComponent } from "./components/quiz-component"
 import { AnimationComponent } from "./components/animation-component"
 import { ResultsComponent } from "./components/results-component"
 import { PCAComponent } from "./components/pca-component"
+import { StudentInfoForm } from "./components/student-info-form"
 
-type AppState = 'home' | 'quiz' | 'animation' | 'results' | 'pca'
+type AppState = "home" | "quiz" | "animation" | "results" | "pca" | "student-info"
 
 export default function EigenvalueLearningApp() {
-  const [currentState, setCurrentState] = useState<AppState>('home')
+  const [currentState, setCurrentState] = useState<AppState>("home")
   const [quizResults, setQuizResults] = useState<any>(null)
+  const [studentInfo, setStudentInfo] = useState<{ name: string; studentId: string } | null>(null)
 
   const handleStartQuiz = () => {
-    setCurrentState('quiz')
+    setCurrentState("student-info")
+  }
+
+  const handleStudentInfoSubmit = (info: { name: string; studentId: string }) => {
+    setStudentInfo(info)
+    setCurrentState("quiz")
   }
 
   const handleStartAnimation = () => {
-    setCurrentState('animation')
+    setCurrentState("animation")
   }
 
   const handleStartPCA = () => {
-    setCurrentState('pca')
+    setCurrentState("pca")
   }
 
   const handleQuizComplete = (results: any) => {
-    setQuizResults(results)
-    setCurrentState('results')
+    // Thêm thông tin sinh viên vào kết quả
+    const resultsWithStudentInfo = {
+      ...results,
+      studentInfo,
+    }
+    setQuizResults(resultsWithStudentInfo)
+    setCurrentState("results")
   }
 
   const handleBackToHome = () => {
-    setCurrentState('home')
+    setCurrentState("home")
     setQuizResults(null)
   }
 
-  if (currentState === 'quiz') {
+  if (currentState === "student-info") {
+    return <StudentInfoForm onSubmit={handleStudentInfoSubmit} onBack={handleBackToHome} />
+  }
+
+  if (currentState === "quiz") {
     return <QuizComponent onComplete={handleQuizComplete} onBack={handleBackToHome} />
   }
 
-  if (currentState === 'animation') {
+  if (currentState === "animation") {
     return <AnimationComponent onBack={handleBackToHome} />
   }
 
-  if (currentState === 'results') {
+  if (currentState === "results") {
     return <ResultsComponent results={quizResults} onBack={handleBackToHome} onRetake={handleStartQuiz} />
   }
 
-  if (currentState === 'pca') {
+  if (currentState === "pca") {
     return <PCAComponent onBack={handleBackToHome} />
   }
 
@@ -60,9 +75,7 @@ export default function EigenvalueLearningApp() {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-4">
-            🧮 Học Giá Trị Riêng & Vector Riêng
-          </h1>
+          <h1 className="text-4xl font-bold text-gray-800 mb-4">🧮 Học Giá Trị Riêng & Vector Riêng</h1>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
             Ứng dụng học tập tương tác với animation step-by-step và hệ thống thi trắc nghiệm
           </p>
