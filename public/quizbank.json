@@ -1,0 +1,111 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "question": "Cho ma trận A. Tìm đa thức đặc trưng của A.",
+      "matrix": [[2, 1], [1, 2]],
+      "options": ["λ² - 4λ + 3", "λ² - 4λ + 4", "λ² - 4λ + 5", "λ² - 4λ"],
+      "correct": 0,
+      "explanation": "Ta lập ma trận A - λI = [[2-λ, 1], [1, 2-λ]]. Tính định thức: det(A - λI) = (2-λ)(2-λ) - 1×1 = λ² - 4λ + 4 - 1 = λ² - 4λ + 3",
+      "wrongExplanations": [
+        "Bạn đã quên trừ đi tích của các phần tử ngoài đường chéo chính",
+        "Bạn có thể đã nhầm lẫn các hằng số khi triển khai biểu thức",
+        "Bạn chưa tính đầy đủ biểu thức và bỏ sót số hạng tự do"
+      ],
+      "category": "Đa thức đặc trưng"
+    },
+    {
+      "id": 2,
+      "question": "Giải phương trình đặc trưng λ² - 5λ + 6 = 0 để tìm giá trị riêng.",
+      "options": ["λ₁ = 2, λ₂ = 3", "λ₁ = 1, λ₂ = 6", "λ₁ = -2, λ₂ = -3", "λ₁ = 0, λ₂ = 5"],
+      "correct": 0,
+      "explanation": "Sử dụng công thức nghiệm: λ = (5 ± √(25-24))/2 = (5 ± 1)/2. Vậy λ₁ = 2, λ₂ = 3",
+      "wrongExplanations": [
+        "Bạn đã nhầm lẫn trong việc áp dụng công thức nghiệm",
+        "Bạn đã đổi dấu sai khi tính nghiệm",
+        "Bạn đã sử dụng sai hệ số trong công thức"
+      ],
+      "category": "Phương trình đặc trưng"
+    },
+    {
+      "id": 3,
+      "question": "Cho ma trận A và giá trị riêng λ = 1. Tìm vector riêng tương ứng.",
+      "matrix": [[3, 1], [0, 1]],
+      "options": ["v = t[1, 0] với t ≠ 0", "v = t[0, 1] với t ≠ 0", "v = t[1, 1] với t ≠ 0", "v = t[-1, 1] với t ≠ 0"],
+      "correct": 0,
+      "explanation": "Giải hệ (A - λI)v = 0 với λ = 1: [[2, 1], [0, 0]][v₁, v₂]ᵀ = [0, 0]ᵀ. Ta có 2v₁ + v₂ = 0, suy ra v₂ = -2v₁. Chọn v₁ = 1 thì v₂ = 0, nên v = t[1, 0]",
+      "wrongExplanations": [
+        "Bạn đã nhầm lẫn trong việc thiết lập hệ phương trình",
+        "Bạn đã giải sai hệ phương trình tuyến tính",
+        "Bạn đã chọn sai tham số tự do"
+      ],
+      "category": "Vector riêng"
+    },
+    {
+      "id": 4,
+      "question": "Cho ma trận A = [[2, 0, 0], [0, 3, 0], [0, 0, 4]], B = [[5, 0, 0], [0, 3, 0], [0, 0, 6]], u = [1, 0, 0], v = [0, 1, 0]. Chọn phát biểu đúng:",
+      "matrixA": [[2, 0, 0], [0, 3, 0], [0, 0, 4]],
+      "matrixB": [[5, 0, 0], [0, 3, 0], [0, 0, 6]],
+      "vectorU": [1, 0, 0],
+      "vectorV": [0, 1, 0],
+      "options": [
+        "v là vector riêng chung của A và B",
+        "u là vector riêng chung của A và B",
+        "Cả u và v đều là vector riêng chung của A và B",
+        "Không có phát biểu nào ở trên là đúng"
+      ],
+      "correct": 2,
+      "explanation": "Kiểm tra Au = [2,0,0] = 2u và Bu = [5,0,0] = 5u → u là vector riêng của cả A và B. Kiểm tra Av = [0,3,0] = 3v và Bv = [0,3,0] = 3v → v cũng là vector riêng của cả A và B. Do đó cả u và v đều là vector riêng chung.",
+      "wrongExplanations": [
+        "Bạn chỉ kiểm tra v mà quên kiểm tra u",
+        "Bạn chỉ kiểm tra u mà quên kiểm tra v",
+        "Bạn đã tính sai phép nhân ma trận với vector"
+      ],
+      "category": "Vector riêng chung"
+    },
+    {
+      "id": 5,
+      "question": "Cho ma trận A = [[1, 2, 0], [0, 1, 3], [0, 0, 1]], B = [[1, 0, 0], [4, 1, 0], [0, 5, 1]], u = [1, 0, 0], v = [0, 1, 0]. Chọn phát biểu đúng:",
+      "matrixA": [[1, 2, 0], [0, 1, 3], [0, 0, 1]],
+      "matrixB": [[1, 0, 0], [4, 1, 0], [0, 5, 1]],
+      "vectorU": [1, 0, 0],
+      "vectorV": [0, 1, 0],
+      "options": [
+        "v là vector riêng chung",
+        "u là vector riêng chung",
+        "Cả u và v đều là vector riêng chung",
+        "Không có phát biểu nào đúng"
+      ],
+      "correct": 1,
+      "explanation": "Kiểm tra Au = [1,0,0] = 1·u → u là vector riêng của A với λ = 1. Kiểm tra Bu = [1,4,0] ≠ k·u → u không phải vector riêng của B. Kiểm tra Av = [2,1,0] ≠ k·v → v không phải vector riêng của A. Kiểm tra Bv = [0,1,5] ≠ k·v → v không phải vector riêng của B. Do đó chỉ có u là vector riêng của A, không có vector riêng chung.",
+      "wrongExplanations": [
+        "Bạn đã nhầm lẫn khi tính Av hoặc Bv",
+        "Bạn chưa hiểu đúng định nghĩa vector riêng chung",
+        "Bạn đã tính sai phép nhân ma trận"
+      ],
+      "category": "Vector riêng chung"
+    },
+    {
+      "id": 6,
+      "question": "Cho ma trận A = [[3, 1, 0], [0, 3, 0], [0, 0, 5]], B = [[3, 0, 2], [0, 3, 0], [0, 0, 5]], u = [1, 0, 0], v = [0, 1, 0]. Chọn phát biểu đúng:",
+      "matrixA": [[3, 1, 0], [0, 3, 0], [0, 0, 5]],
+      "matrixB": [[3, 0, 2], [0, 3, 0], [0, 0, 5]],
+      "vectorU": [1, 0, 0],
+      "vectorV": [0, 1, 0],
+      "options": [
+        "v là vector riêng chung",
+        "u là vector riêng chung",
+        "Cả u và v đều là vector riêng chung",
+        "Không có phát biểu nào đúng"
+      ],
+      "correct": 0,
+      "explanation": "Kiểm tra Au = [3,0,0] = 3u → u là vector riêng của A với λ = 3. Kiểm tra Bu = [3,0,0] = 3u → u cũng là vector riêng của B với λ = 3. Kiểm tra Av = [1,3,0] ≠ k·v → v không phải vector riêng của A. Kiểm tra Bv = [0,3,0] = 3v → v là vector riêng của B với λ = 3. Do đó chỉ có v là vector riêng chung của cả A và B.",
+      "wrongExplanations": [
+        "Bạn đã tính sai Au hoặc Bu",
+        "Bạn đã nhầm lẫn giữa vector riêng của từng ma trận và vector riêng chung",
+        "Bạn chưa kiểm tra đầy đủ cả hai ma trận"
+      ],
+      "category": "Vector riêng chung"
+    }
+  ]
+}
